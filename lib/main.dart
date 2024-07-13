@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodfolio/presentation/providers/favorite_meal_provider.dart';
+import 'package:foodfolio/presentation/providers/filter_provider.dart';
 import 'package:foodfolio/presentation/screens/tabs_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,15 @@ final theme = ThemeData(
 
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => FavoriteMealProvider(),
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider<FilterProvider>(create: (context) => FilterProvider(),),
+      ChangeNotifierProvider<FavoriteMealProvider>(create: (context) => FavoriteMealProvider(),),
+    ],
     builder: (context, _) {
       return const MyApp();
-    },
-  ));
+    },)
+  );
 }
 
 class MyApp extends StatelessWidget {

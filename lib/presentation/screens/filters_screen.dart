@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodfolio/presentation/providers/filter_provider.dart';
+import 'package:provider/provider.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});
@@ -8,11 +10,6 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  bool _isGlutenFree = false;
-  bool _isLactoseFree = false;
-  bool _isVegetarian = false;
-  bool _isVegan = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,33 +25,39 @@ class _FiltersScreenState extends State<FiltersScreen> {
   }
 
   Widget _buildBody() {
+    final filterProvider = Provider.of<FilterProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           _buildSwitchTile(
-            value: _isGlutenFree,
-            title: 'Gluten-free',
-            subTitle: 'only include gluten-free meals',
-            onChanged: (value) => setState(() => _isGlutenFree = value),
-          ),
+              value: filterProvider.isGlutenFree,
+              title: 'Gluten-free',
+              subTitle: 'only include gluten-free meals',
+              onChanged: (value) {
+                filterProvider.setGlutenFree(value);
+              }),
           _buildSwitchTile(
-            value: _isLactoseFree,
-            title: 'Lactose-free',
-            subTitle: 'only include lactose-free meals',
-            onChanged: (value) => setState(() => _isLactoseFree = value),
-          ),
+              value: filterProvider.isLactoseFree,
+              title: 'Lactose-free',
+              subTitle: 'only include lactose-free meals',
+              onChanged: (value) {
+                filterProvider.setLactoseFree(value);
+              }),
           _buildSwitchTile(
-            value: _isVegetarian,
-            title: 'Vegetarian',
-            subTitle: 'only include vegetarian meals',
-            onChanged: (value) => setState(() => _isVegetarian = value),
-          ),
+              value: filterProvider.isVegetarian,
+              title: 'Vegetarian',
+              subTitle: 'only include vegetarian meals',
+              onChanged: (value) {
+                filterProvider.setVegetarian(value);
+              }),
           _buildSwitchTile(
-              value: _isVegan,
+              value: filterProvider.isVegan,
               title: 'Vegan',
               subTitle: 'only include vegan meals',
-              onChanged: (value) => setState(() => _isVegan = value))
+              onChanged: (value) {
+                filterProvider.setVegan(value);
+              }),
         ],
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foodfolio/presentation/screens/favorite_meals_screen.dart';
-import 'package:foodfolio/presentation/screens/filters_screen.dart';
 import 'package:foodfolio/presentation/screens/section_screen.dart';
 import 'package:foodfolio/presentation/widgets/my_drawer.dart';
 
@@ -24,14 +23,13 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     Widget activePage = const SectionScreen();
     String activePageTitle = 'Sections';
-    if(selectedPageIndex == 1) {
+    if (selectedPageIndex == 1) {
       activePage = const FavoriteMealsScreen();
       activePageTitle = 'Your Favorites';
     }
     return Scaffold(
       appBar: _buildAppbar(activePageTitle),
-      drawer: MyDrawer(
-      ),
+      drawer: const MyDrawer(),
       body: _buildBody(activePage),
       bottomNavigationBar: _buildBottomNavbar(),
     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodfolio/data/dummy_data.dart';
 import 'package:foodfolio/domain/models/meal.dart';
+import 'package:foodfolio/presentation/providers/filter_provider.dart';
 import 'package:foodfolio/presentation/screens/meal_details_screen.dart';
 import 'package:foodfolio/presentation/widgets/meal_item.dart';
+import 'package:provider/provider.dart';
 import '../../domain/models/section.dart';
 
 class Meals extends StatelessWidget {
@@ -23,11 +25,28 @@ class Meals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filteredMeals =
-        dummyMeals.where((meal) => meal.sections.contains(section.id)).toList();
+    final filtersProvider = Provider.of<FilterProvider>(context, listen: false);
+    final filteredMeals = dummyMeals.where(
+      (meal) {
+        if (filtersProvider.isGlutenFree && !meal.isGlutenFree) {
+          return false;
+        }
+        if (filtersProvider.isLactoseFree && !meal.isLactoseFree) {
+          return false;
+        }
+        if (filtersProvider.isVegetarian && !meal.isVegetarian) {
+          return false;
+        }
+        if (filtersProvider.isVegan && !meal.isVegan) {
+          return false;
+        }
+        return meal.sections.contains(section.id);
+      },
+    ).toList();
+
     return Scaffold(
       appBar: _buildAppbar(),
-      body: _buildBody(filteredMeals),
+      body: _buildBody(filteredMeals, context),
     );
   }
 
@@ -37,7 +56,13 @@ class Meals extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(List<Meal> filteredMeals) {
+  Widget _buildBody(List<Meal> filteredMeals, BuildContext context) {
+    return filteredMeals.isEmpty
+        ? _buildEmptyMealsMessage(context)
+        : _buildMealsList(filteredMeals);
+  }
+
+  Widget _buildMealsList(List<Meal> filteredMeals) {
     return ListView.builder(
       padding: const EdgeInsets.all(10),
       itemCount: filteredMeals.length,
@@ -54,6 +79,17 @@ class Meals extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyMealsMessage(BuildContext context) {
+    return Center(
+      child: Text(
+        'No meals Found',
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+      ),
     );
   }
 }
